@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -16,8 +17,10 @@ import { UserModule } from './user/user.module';
       database: 'test',
       entities: [User],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     UserModule,
+    PhotoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
