@@ -8,7 +8,7 @@ export class User {
 
   @Column()
   username: string;
-  @Column()
+  @Column({ unique: true })
   email: string;
   @Column()
   password: string;
@@ -17,4 +17,6 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+  @Column({ nullable: true })
+  token: string;
 }

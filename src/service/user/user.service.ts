@@ -19,4 +19,17 @@ export class UserService implements UserRepository {
   async getAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
   }
+
+  async findByEmailName(email: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { email: email } });
+  }
+
+  async verifyTokenFromDatabase(
+    email: string,
+    token: string,
+  ): Promise<User | undefined> {
+    return this.userRepository.findOne({
+      where: { email: email, token: token },
+    });
+  }
 }

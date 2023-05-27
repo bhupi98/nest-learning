@@ -7,4 +7,11 @@ export interface UserRepository {
   getAllUsers(): Promise<User[]>;
 
   createUser(userDto: CreateUserDto): Promise<User>;
+
+  verifyTokenFromDatabase(
+    email: string,
+    token: string,
+  ): Promise<User | undefined>;
+
+  findByEmailName(email: string): Promise<User | undefined>;
 }
