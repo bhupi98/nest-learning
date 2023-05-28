@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './module/user/user.module';
@@ -9,6 +14,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
 import { JwtMiddleware } from './middleware/jwtmiddleware';
 import { UserService } from './service/user/user.service';
 import { User } from './model/user.entity';
+import { UserController } from './controller/user/user.controller';
 
 @Module({
   imports: [
@@ -49,8 +55,10 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .exclude('/user/create')
-      .exclude('/auth/login')
-      .forRoutes('*');
+      .exclude(
+        { path: '/user/create', method: RequestMethod.POST },
+        { path: '/auth/login', method: RequestMethod.POST },
+      )
+      .forRoutes(UserController);
   }
 }

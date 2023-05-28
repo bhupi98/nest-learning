@@ -37,12 +37,14 @@ export class JwtMiddleware implements NestMiddleware {
         );
         console.log('user214324', user);
         if (!user) {
-          throw new UnauthorizedException();
+          console.log('helele');
+          throw new UnauthorizedException('User not found in the database');
         }
 
         req.user = decoded;
       } catch (error) {
-        throw new UnauthorizedException('Invalid token12');
+        console.log('error', error.response);
+        throw new UnauthorizedException(error);
       }
     } catch (err) {
       if (err instanceof jwt.TokenExpiredError) {
