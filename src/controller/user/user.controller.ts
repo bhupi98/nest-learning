@@ -13,11 +13,10 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from 'src/dto/user.dto';
 import { UserService } from 'src/service/user/user.service';
 @Controller('user')
-@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get()
+  @Get('/users')
   async getUsers() {
     return await this.userService.getAllUsers();
   }

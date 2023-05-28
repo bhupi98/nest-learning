@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './module/user/user.module';
@@ -6,9 +6,13 @@ import { AuthModule } from './auth/auth.module';
 import entities from './model';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { JwtMiddleware } from './middleware/jwtmiddleware';
+import { UserService } from './service/user/user.service';
+import { User } from './model/user.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +43,14 @@ import { JwtStrategy } from './auth/jwt.strategy';
     AuthModule,
   ],
   controllers: [],
-  providers: [JwtStrategy],
+  providers: [JwtStrategy, UserService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(JwtMiddleware)
+      .exclude('/user/create')
+      .exclude('/auth/login')
+      .forRoutes('*');
+  }
+}

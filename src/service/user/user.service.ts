@@ -28,8 +28,10 @@ export class UserService implements UserRepository {
     email: string,
     token: string,
   ): Promise<User | undefined> {
-    return this.userRepository.findOne({
-      where: { email: email, token: token },
-    });
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (user && user.token === token) {
+      return user;
+    }
+    return null;
   }
 }
